@@ -1,0 +1,8 @@
+pnpm add -g nodemon(curso de node vid #4)
+luego escribes nodemon "nombre del archivo" y asi va a estar a la escucha de todo lo q ocurra de forma automatica.
+
+pnpm add express (curso de node vid #5)
+
+npm i ejs (curso de node vid #6)
+
+No me vi de el video #6 la parte de anadir css y js
