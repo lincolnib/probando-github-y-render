@@ -3,7 +3,7 @@ const app = express();
 
 require('dotenv').config()
  
-const port = process.env.PORT || 3000;// para acceder a las variables de entorno se usa process.env.nombreDeLaVariableDeEntorno
+const port = process.env.PORT;// para acceder a las variables de entorno se usa process.env.nombreDeLaVariableDeEntorno
 
 //Conexion a base de datos
 const mongoose = require('mongoose');
