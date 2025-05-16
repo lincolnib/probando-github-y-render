@@ -1,5 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
+
+// parse application/x-www-form-urlencoded (revisar documentacion oficial de body-parser)
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
 require('dotenv').config()
  
@@ -37,8 +43,6 @@ app.use(express.static(__dirname + '/publicc'))
 
 //Rutas web
 app.use('/', require('./router/RutasWeb'))
-
-//Mascotas
 app.use('/mascotas', require('./router/Mascotas'))
 
 app.use((req, res, next) => {

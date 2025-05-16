@@ -1,0 +1,29 @@
+<%- include('template/cabecera', {tituloWeb: 'Crear nueva mascota'})  %>
+
+   <div class="container">
+
+    <h1>Crear nueva mascota</h1>
+    <!-- OJOOO el formulario solo admite metodo post y metodo get(por defecto) -->
+    <form action="/mascotas" method="POST">  <!-- el action es la ruta donde nosotros vamos a mostrar la informacion q se escribio en los inputs, y hemos configurado la ruta / en el archivo Mascotas.js con el metodo post,como esa ruta del metodo post esta dentro de /mascotas ponemos aqui dentro del action /mascotas -->
+        <input 
+        type="text"
+        placeholder="Agregar nombre"
+        class="form-control my-2"
+        name="nombre"
+        >
+        <input 
+        type="text"
+        placeholder="Agregar descripcion"
+        class="form-control my-2"
+        name="descripcion"
+        >
+        <button
+            class="btn btn-success btn-block"
+            type="submit"
+        >
+            Agregar
+        </button>
+    </form>
+   </div>
+
+<%- include('template/footer')  %>

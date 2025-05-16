@@ -1,0 +1,117 @@
+<%- include('template/cabecera', {tituloWeb: 'Crear nueva mascota'})  %>
+
+   <div class="container">
+
+        <h1>Detalle Mascota</h1>
+        <% if (error) { %>
+            <p>
+                <%= mensaje %>
+            </p>
+            <a href="/mascotas" class="btn btn-dark btn-block" >Volver a mascotas</a>
+        <% } %> 
+
+        <% if (!error) { %>
+
+            <form id="formularioEditar" data-id="<%= mascota.id %>">
+                <input
+                    type="text"
+                    class="form-control my-2"
+                    name="nombre"
+                    value="<%= mascota.nombre %>"
+                    id="nombreInput"
+                >
+                <input
+                    type="text"
+                    class="form-control my-2"
+                    name="descripcion"
+                    value="<%= mascota.descripcion %>"
+                    id="descripcionInput"
+                >
+                <button
+                    class="btn btn-warning btn-block "
+                    type="submit"
+                >
+                    Editar
+                </button>
+            </form>
+
+            <hr>
+
+            <button 
+                class="btn btn-danger btn-sm my-1"
+                id="btnEliminar"
+                data-id="<%= mascota.id %>"
+            >
+                Eliminar
+            </button>
+
+        <% } %>
+   </div>
+    
+
+<%- include('template/footer')  %>
+
+<script>
+    const btnEliminar = document.querySelector('#btnEliminar');
+    btnEliminar.addEventListener('click', async () => {
+        console.log('me diste click');
+        const id = btnEliminar.dataset.id
+        console.log('id: ', id);
+        
+        try { //fetch recibe como 1er parametro una url, en este caso la url es la url del elemento q se quiere eliminar, o ruta del elemento que se quiere eliminar.
+            const data = await fetch(`/mascotas/${id}`, {
+                method: 'delete'
+            })// realiza una solicitud a esa ruta que se encuentra configurada en Mascota.js (router.delete). Para q se entienda, fetch realiza normalmente una solicitud a la url de un servidor para insertar, actualizar, eliminar o leer cierta informacion, en este caso fetch hara lo mismo, pero se le estara dando acceso a una url q contiene de forma dinamica la informacion de la mascota que se quiere eliminar para q el acceda a esa informacion y elimine a la mascota
+            const res = await data.json()
+            console.log(res);
+            if(res.estado){ // si se elimino la mascota mandame a la pestana de mascotas q es donde estan todas las mascotas
+                window.location.href = '/mascotas'
+            }else{
+                console.log(res)
+            }
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+        
+    });
+
+    const formularioEditar = document.querySelector('#formularioEditar');
+    formularioEditar.addEventListener('submit', async (e) => {// aqui dentro hay que capturar todo lo q llevan los inputs por separado y tambien hay q capturar el id, para capturar el id podemos ponerle un data-id con el id y despues capturar el elemento con queryselector, pero como ya tenemos capturado el formulario le ponemos el data-id al formulario directamente
+        e.preventDefault();
+        // Alternativa #1 (capturar contenido del input usando el name y el value)
+        const nombre = formularioEditar.elements['nombre'].value // esto nos da una pareja clave/valor, usa el contenido del name para referirse a un input en especifico, en este caso nombre y le almacena el nombre que se ponga en el input mediante el value.
+        //Alternativa #2 (capturar contenido input usando el id) es mejor usar esta
+        const descripcion = document.querySelector('#descripcionInput').value// mediante el id hace referencia al input q quiere capturar, y toma su value
+        const id = formularioEditar.dataset.id
+        console.log(nombre, descripcion, id);
+
+        try {
+            const data = await fetch(`/mascotas/${id}`, {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nombre, descripcion})
+            })
+            const res = await data.json()
+            console.log(res);
+            if(res.estado){
+                window.location.href = '/mascotas'
+            } else {
+                console.log(res);
+                
+            }
+            
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+        
+        
+        
+        
+    })
+</script>

@@ -1,7 +1,16 @@
-<%- include('template/cabecera', {tituloWeb: 'Pagina de inicio'})  %>
+<%- include('template/cabecera', {tituloWeb: 'Pagina de mascotas'})  %>
 
    <div class="container">
 
+        <h1>CRUD MongoDB</h1>
+
+        <a
+            class="btn btn-success btn-block my-4"
+            href="/mascotas/crear"
+        >
+            Crear nueva mascota
+        </a>
+        
         <table class="table">
             <thead>
                 <tr>
@@ -18,7 +27,14 @@
                             <th scope="row"><%= mascota.id %></th>
                             <td><%= mascota.nombre %></td>
                             <td><%= mascota.descripcion %></td>
-                            <td>@mdo</td>
+                            <td>
+                                <a
+                                    class="btn btn-warning btn-sm"
+                                    href="mascotas/<%= mascota.id %>"
+                                >
+                                    Editar
+                                </a>
+                            </td>
                         </tr>
                     <% }) %>
                  <% } %>

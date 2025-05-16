@@ -35,4 +35,100 @@ router.get('/', async (req, res) => {
 //     })
 // })
 
+router.get('/crear', (req, res) => {
+    res.render('crear')
+});
+
+router.post('/', async (req, res) => {
+    const body = req.body;// al recibir estos datos del formulario tenemos q almacenarlos(guardarlos) en la base de datos, existen 2 metodos para hacerlo, para ello haremos un try catch
+
+    // console.log(body);
+
+    //metodo #1
+    // try {
+    //      const mascotaDB = new Mascota(body)// creamos una nueva mascota con los datos del formulario q se guardaron en la constante body, esa mascota se creo siguiendo el modelo de mascota.js.
+    //     await mascotaDB.save()// almacenamos esa mascota en mongodb
+    //     // console.log("Mascota creada: ", mascotaDB);
+    //     res.redirect('/mascotas')// esto va a empujar a esa mascota creada a la ruta q nosotros queramos. En este caso al irnos a la ruta /mascotas (q se encuentra en app4.js en el comentario rutas web) llamaremos al archivo Mascotas.js, el cual llamara al modelo mascota.js, como almacenamos esta nueva mascota en la base de datos de mongodb entonces al usar el metodo find() automaticamente pintara todas las mascotas q hayan, incluyendo la q se acabo de crear pq ya forma parte de la base de datos.
+        
+    // } catch (error) {
+    //     console.log(error);
+        
+    // }
+
+    //metodo #2 (mas corto)
+     try {
+        await Mascota.create(body)// crea y almacena la mascota en la base de datos
+        res.redirect('/mascotas')
+    } catch (error) {
+        console.log('error', error)
+    }
+
+})
+
+router.get('/:id', async(req, res) => {// tenemos q leer una ruta dinamica, en este caso seria /mascota/el id de la mascota, para q sea dinamica ponemos /:id
+    const id = req.params.id// el .id tiene q coincidir con el nombre q se puso despues de los dos : en el get. De esta forma se almacena en id el id de la mascota a la q se le hizo click
+    try {
+        const mascotaDB = await Mascota.findOne({ _id: id })// se pone _id pq en la base de datos el id viene con ese guion bajo, de esa forma encontraremos la primera mascota que tenga ese id y tomaremos toda su informacion
+        console.log(mascotaDB)
+        res.render('detalle', {
+            mascota: mascotaDB,
+            error: false
+        })
+    } catch (error) {
+        console.log('erroooooooooorrr', error)
+        res.render('detalle', {
+            error: true,
+            mensaje: 'No se encuentra la mascota...'
+        })
+    }
+})
+
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log('id desde backend', id)
+    try {
+
+        const mascotaDB = await Mascota.findByIdAndDelete({ _id: id });// elimina la mascota
+        console.log(mascotaDB)
+
+        if (!mascotaDB) {
+            res.json({
+                estado: false,
+                mensaje: 'No se puede eliminar'
+            })
+        } else {
+            res.json({
+                estado: true,
+                mensaje: 'eliminado!'
+            })
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const body = req.body
+
+    try {
+        const mascotaDB = await Mascota.findByIdAndUpdate(id, body, { useFindAndModify: false });
+        console.log(mascotaDB);
+        res.json({
+            estado: true,
+            mensaje: 'Mascota editada'
+        })
+    } catch (error) {
+        console.log(error);
+
+         res.json({
+            estado: false,
+            mensaje: 'No se pudo editar la mascota'
+        })
+        
+    }
+})
+
 module.exports = router;
